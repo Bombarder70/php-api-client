@@ -140,11 +140,11 @@ class Client {
     } catch (\GuzzleHttp\Exception\BadResponseException $e) {
       $this->lastResponse = $e->getResponse();
       throw new \PleiadesDecom\PhpApiClient\Exception\RequestException(
-        $this->lastResponse->getStatusCode()
-        ." "
-        .$this->lastResponse->getReasonPhrase()
-        .": "
-        .(string) $this->lastResponse->getBody()
+        json_encode([
+          "statusCode" => $this->lastResponse->getStatusCode(),
+          "reason" => $this->lastResponse->getReasonPhrase(),
+          "body" => @json_decode($this->lastResponse->getBody(true))
+        ])
       );
     }
   }
